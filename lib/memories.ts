@@ -1,4 +1,5 @@
 import { SONG_CATALOG, type CatalogSong } from '@/lib/songs'
+import { assetPath } from '@/lib/utils'
 
 export type Song = {
   id: string
@@ -158,10 +159,10 @@ export const TYPING_EXAMPLE =
 
 // Returns the image path for a finished bloom (flowers 1 through 5).
 export function flowerSrc(n: number) {
-  return `/images/flower-${n}.png`
+  return assetPath(`/images/flower-${n}.png`)
 }
 
 // Returns the sprout image used before the user presses Bloom.
 export function sproutSrc() {
-  return '/images/flower-sprout.png'
+  return assetPath('/images/flower-sprout.png')
 }

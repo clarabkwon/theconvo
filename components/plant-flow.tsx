@@ -16,8 +16,8 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { GlassModal } from '@/components/glass'
-import { cn } from '@/lib/utils'
-import { flowerSrc, TYPING_EXAMPLE, type Song } from '@/lib/memories'
+import { cn, assetPath } from '@/lib/utils'
+import { flowerSrc, sproutSrc, TYPING_EXAMPLE, type Song } from '@/lib/memories'
 import {
   MOODS,
   SONG_CATALOG,
@@ -405,7 +405,7 @@ export function PlantFlow({
           <div className="bloom-in mt-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/flower-sprout.png"
+              src={sproutSrc()}
               alt="A sketched sprout grown from your memory, before it blooms"
               width={280}
               height={280}
@@ -436,7 +436,7 @@ export function PlantFlow({
           <div key={flower} className="bloom-in mt-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={flowerSrc(flower) || '/placeholder.svg'}
+              src={flowerSrc(flower) || assetPath('/placeholder.svg')}
               alt="Your fully bloomed sketched memory flower"
               width={300}
               height={300}

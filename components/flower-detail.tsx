@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Music, Sprout } from 'lucide-react'
 import { GlassModal } from '@/components/glass'
-import { cn } from '@/lib/utils'
+import { cn, assetPath } from '@/lib/utils'
 import { flowerSrc, type Memory } from '@/lib/memories'
 
 // Shows one memory flower in detail. Posts stay anonymous on purpose.
@@ -56,7 +56,7 @@ export function FlowerDetail({
             <span className="text-xs text-muted-foreground">{memory.date}</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={flowerSrc(memory.flower) || '/placeholder.svg'}
+              src={flowerSrc(memory.flower) || assetPath('/placeholder.svg')}
               alt=""
               width={36}
               height={36}
@@ -81,7 +81,7 @@ export function FlowerDetail({
             <div className="glass flex flex-col items-center rounded-2xl p-5 text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={flowerSrc((memory.flower % 5) + 1) || '/placeholder.svg'}
+                src={flowerSrc((memory.flower % 5) + 1) || assetPath('/placeholder.svg')}
                 alt=""
                 width={110}
                 height={110}

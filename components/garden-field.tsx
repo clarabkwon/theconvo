@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn, assetPath } from '@/lib/utils'
 import { flowerSrc, type Memory } from '@/lib/memories'
 
 // Blur amount grows as the visitor goes deeper into the garden.
@@ -24,7 +24,7 @@ export function GardenBackground({ depth }: { depth: 0 | 1 | 2 | 3 }) {
         <div
           className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out"
           style={{
-            backgroundImage: 'url(/images/garden-field.png)',
+            backgroundImage: `url(${assetPath('/images/garden-field.png')})`,
             filter: 'saturate(0.45) brightness(1.08) contrast(0.92)',
             opacity: 0.85,
           }}
@@ -53,7 +53,7 @@ export function GardenBackground({ depth }: { depth: 0 | 1 | 2 | 3 }) {
           <div
             className="absolute inset-x-0 bottom-0 top-[24%] bg-cover bg-[center_65%]"
             style={{
-              backgroundImage: 'url(/images/garden-grass.png)',
+              backgroundImage: `url(${assetPath('/images/garden-grass.png')})`,
               filter: 'saturate(0.3) brightness(1.15) contrast(0.88)',
               opacity: 0.42,
               mixBlendMode: 'multiply',
@@ -137,7 +137,7 @@ export function MemoryFlowers({
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={flowerSrc(m.flower) || '/placeholder.svg'}
+                src={flowerSrc(m.flower) || assetPath('/placeholder.svg')}
                 alt=""
                 width={m.size}
                 height={m.size}

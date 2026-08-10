@@ -3,7 +3,7 @@
 import { ArrowLeft, X } from 'lucide-react'
 import { useState } from 'react'
 import { GlassPanel, InkButton } from '@/components/glass'
-import { cn } from '@/lib/utils'
+import { cn, assetPath } from '@/lib/utils'
 import { flowerSrc, type Memory } from '@/lib/memories'
 
 // Overlay controls that sit on top of the garden field.
@@ -102,7 +102,7 @@ export function GardenOverlay({
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={flowerSrc(previewMemory.flower) || '/placeholder.svg'}
+                  src={flowerSrc(previewMemory.flower) || assetPath('/placeholder.svg')}
                   alt=""
                   width={90}
                   height={90}
