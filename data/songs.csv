@@ -1,0 +1,101 @@
+id,title,artist,mood,tint
+longing-01,Tears in Heaven,Eric Clapton,longing,bg-sky-200
+longing-02,Someone Like You,Adele,longing,bg-sky-200
+longing-03,Fix You,Coldplay,longing,bg-sky-200
+longing-04,The Night We Met,Lord Huron,longing,bg-sky-200
+longing-05,I Will Always Love You,Whitney Houston,longing,bg-sky-200
+longing-06,Yesterday,The Beatles,longing,bg-sky-200
+longing-07,Nothing Compares 2 U,Sinead O'Connor,longing,bg-sky-200
+longing-08,Skinny Love,Bon Iver,longing,bg-sky-200
+longing-09,All I Want,Kodaline,longing,bg-sky-200
+longing-10,Jealous,Labrinth,longing,bg-sky-200
+longing-11,When I Look at You,Miley Cyrus,longing,bg-sky-200
+longing-12,If I Die Young,The Band Perry,longing,bg-sky-200
+longing-13,My Immortal,Evanescence,longing,bg-sky-200
+longing-14,A Thousand Years,Christina Perri,longing,bg-sky-200
+longing-15,Stay With Me,Sam Smith,longing,bg-sky-200
+longing-16,Photograph,Ed Sheeran,longing,bg-sky-200
+longing-17,See You Again,Wiz Khalifa,longing,bg-sky-200
+longing-18,Dancing With Your Ghost,Sasha Alex Sloan,longing,bg-sky-200
+longing-19,I Miss You,Blink-182,longing,bg-sky-200
+longing-20,Without You,Mariah Carey,longing,bg-sky-200
+remembrance-01,Candle in the Wind,Elton John,remembrance,bg-amber-200
+remembrance-02,In the Living Years,Mike and The Mechanics,remembrance,bg-amber-200
+remembrance-03,Dance With My Father,Luther Vandross,remembrance,bg-amber-200
+remembrance-04,The Dance,Garth Brooks,remembrance,bg-amber-200
+remembrance-05,Wind Beneath My Wings,Bette Midler,remembrance,bg-amber-200
+remembrance-06,Hero,Mariah Carey,remembrance,bg-amber-200
+remembrance-07,One Sweet Day,Mariah Carey,remembrance,bg-amber-200
+remembrance-08,I'll Be Missing You,Puff Daddy,remembrance,bg-amber-200
+remembrance-09,Supermarket Flowers,Ed Sheeran,remembrance,bg-amber-200
+remembrance-10,Fire and Rain,James Taylor,remembrance,bg-amber-200
+remembrance-11,Angel,Sarah McLachlan,remembrance,bg-amber-200
+remembrance-12,Time to Say Goodbye,Andrea Bocelli,remembrance,bg-amber-200
+remembrance-13,You Raise Me Up,Josh Groban,remembrance,bg-amber-200
+remembrance-14,Hallelujah,Jeff Buckley,remembrance,bg-amber-200
+remembrance-15,My Heart Will Go On,Celine Dion,remembrance,bg-amber-200
+remembrance-16,Smallest Light,Ingrid Michaelson,remembrance,bg-amber-200
+remembrance-17,Gone Too Soon,Michael Jackson,remembrance,bg-amber-200
+remembrance-18,Slipping Through My Fingers,ABBA,remembrance,bg-amber-200
+remembrance-19,Keep Me in Your Heart,Warren Zevon,remembrance,bg-amber-200
+remembrance-20,What a Wonderful World,Louis Armstrong,remembrance,bg-amber-200
+comfort-01,Lean on Me,Bill Withers,comfort,bg-emerald-200
+comfort-02,Bridge Over Troubled Water,Simon and Garfunkel,comfort,bg-emerald-200
+comfort-03,Let It Be,The Beatles,comfort,bg-emerald-200
+comfort-04,You'll Never Walk Alone,Gerry and The Pacemakers,comfort,bg-emerald-200
+comfort-05,True Colors,Cyndi Lauper,comfort,bg-emerald-200
+comfort-06,You Are Not Alone,Michael Jackson,comfort,bg-emerald-200
+comfort-07,Heal the World,Michael Jackson,comfort,bg-emerald-200
+comfort-08,Beautiful,Christina Aguilera,comfort,bg-emerald-200
+comfort-09,The Scientist,Coldplay,comfort,bg-emerald-200
+comfort-10,Gravity,John Mayer,comfort,bg-emerald-200
+comfort-11,Holocene,Bon Iver,comfort,bg-emerald-200
+comfort-12,Bloom,The Paper Kites,comfort,bg-emerald-200
+comfort-13,To Build a Home,The Cinematic Orchestra,comfort,bg-emerald-200
+comfort-14,Saturn,Sleeping at Last,comfort,bg-emerald-200
+comfort-15,I Will Carry You,Ellie Holcomb,comfort,bg-emerald-200
+comfort-16,Held,Natalie Grant,comfort,bg-emerald-200
+comfort-17,Be Still,The Fray,comfort,bg-emerald-200
+comfort-18,Come Healing,Leonard Cohen,comfort,bg-emerald-200
+comfort-19,Peace,O.A.R.,comfort,bg-emerald-200
+comfort-20,Better Place,Rachel Platten,comfort,bg-emerald-200
+farewell-01,Goodbye My Lover,James Blunt,farewell,bg-violet-200
+farewell-02,Leaving on a Jet Plane,John Denver,farewell,bg-violet-200
+farewell-03,So Long Marianne,Leonard Cohen,farewell,bg-violet-200
+farewell-04,Fast Car,Tracy Chapman,farewell,bg-violet-200
+farewell-05,Landslide,Fleetwood Mac,farewell,bg-violet-200
+farewell-06,Go Rest High on That Mountain,Vince Gill,farewell,bg-violet-200
+farewell-07,If You Leave Me Now,Chicago,farewell,bg-violet-200
+farewell-08,Don't Look Back in Anger,Oasis,farewell,bg-violet-200
+farewell-09,Wish You Were Here,Pink Floyd,farewell,bg-violet-200
+farewell-10,Knockin' on Heaven's Door,Bob Dylan,farewell,bg-violet-200
+farewell-11,Free Bird,Lynyrd Skynyrd,farewell,bg-violet-200
+farewell-12,Amazing Grace,Judy Collins,farewell,bg-violet-200
+farewell-13,Over the Rainbow,Israel Kamakawiwo'ole,farewell,bg-violet-200
+farewell-14,Into the West,Annie Lennox,farewell,bg-violet-200
+farewell-15,Carry On Wayward Son,Kansas,farewell,bg-violet-200
+farewell-16,Spirit in the Sky,Norman Greenbaum,farewell,bg-violet-200
+farewell-17,Dust in the Wind,Kansas,farewell,bg-violet-200
+farewell-18,Seasons of Love,Rent Cast,farewell,bg-violet-200
+farewell-19,For Good,Wicked Cast,farewell,bg-violet-200
+farewell-20,Somewhere Over the Rainbow,Judy Garland,farewell,bg-violet-200
+solitude-01,Hurt,Johnny Cash,solitude,bg-slate-200
+solitude-02,The Sound of Silence,Simon and Garfunkel,solitude,bg-slate-200
+solitude-03,Everybody Hurts,R.E.M.,solitude,bg-slate-200
+solitude-04,Mad World,Gary Jules,solitude,bg-slate-200
+solitude-05,Black,Pearl Jam,solitude,bg-slate-200
+solitude-06,How to Disappear Completely,Radiohead,solitude,bg-slate-200
+solitude-07,Creep,Radiohead,solitude,bg-slate-200
+solitude-08,Nutshell,Alice in Chains,solitude,bg-slate-200
+solitude-09,Adam's Song,Blink-182,solitude,bg-slate-200
+solitude-10,Boulevard of Broken Dreams,Green Day,solitude,bg-slate-200
+solitude-11,Breathe Me,Sia,solitude,bg-slate-200
+solitude-12,Liability,Lorde,solitude,bg-slate-200
+solitude-13,Motion Picture Soundtrack,Radiohead,solitude,bg-slate-200
+solitude-14,Both Sides Now,Joni Mitchell,solitude,bg-slate-200
+solitude-15,River,Joni Mitchell,solitude,bg-slate-200
+solitude-16,Blue,Joni Mitchell,solitude,bg-slate-200
+solitude-17,Alone Again Naturally,Gilbert O'Sullivan,solitude,bg-slate-200
+solitude-18,Only the Lonely,Roy Orbison,solitude,bg-slate-200
+solitude-19,Eleanor Rigby,The Beatles,solitude,bg-slate-200
+solitude-20,Asleep,The Smiths,solitude,bg-slate-200

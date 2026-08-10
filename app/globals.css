@@ -1,0 +1,244 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@theme inline {
+  --font-sans: var(--font-sans-var), 'Geist', sans-serif;
+  --font-serif: var(--font-serif-var), 'Cormorant Garamond', serif;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light;
+  /* Soft sky base */
+  --background: oklch(0.95 0.025 220);
+  --foreground: oklch(0.28 0.03 260);
+  --card: oklch(1 0 0 / 45%);
+  --card-foreground: oklch(0.28 0.03 260);
+  --popover: oklch(1 0 0 / 55%);
+  --popover-foreground: oklch(0.28 0.03 260);
+  /* Deep ink for primary actions */
+  --primary: oklch(0.26 0.02 260);
+  --primary-foreground: oklch(0.98 0.005 220);
+  --secondary: oklch(1 0 0 / 40%);
+  --secondary-foreground: oklch(0.28 0.03 260);
+  --muted: oklch(0.95 0.01 220 / 60%);
+  /* Dark enough muted text for readable contrast on glass. */
+  --muted-foreground: oklch(0.38 0.02 260);
+  /* Leaf-green accent */
+  --accent: oklch(0.72 0.12 150);
+  --accent-foreground: oklch(0.22 0.03 150);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(1 0 0 / 55%);
+  --input: oklch(1 0 0 / 45%);
+  --ring: oklch(0.6 0.03 260 / 50%);
+  --radius: 1rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* ---- Liquid Glass ---- */
+  .glass {
+    position: relative;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.22) 40%,
+      rgba(255, 255, 255, 0.34) 100%
+    );
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    backdrop-filter: blur(20px) saturate(1.5);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.75),
+      inset 0 -1px 1px rgba(255, 255, 255, 0.25),
+      inset 1px 0 1px rgba(255, 255, 255, 0.3),
+      0 8px 32px rgba(70, 90, 120, 0.14),
+      0 1px 2px rgba(70, 90, 120, 0.08);
+  }
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      transparent 30%,
+      transparent 70%,
+      rgba(255, 255, 255, 0.18) 100%
+    );
+  }
+
+  .glass-strong {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.62) 0%,
+      rgba(255, 255, 255, 0.34) 45%,
+      rgba(255, 255, 255, 0.48) 100%
+    );
+    -webkit-backdrop-filter: blur(28px) saturate(1.6);
+    backdrop-filter: blur(28px) saturate(1.6);
+  }
+
+  .glass-pill {
+    border-radius: 9999px;
+  }
+
+  /* Plain white panel for steps that should not look glassy. */
+  .glass-solid {
+    background: #ffffff !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 16px 40px rgba(40, 50, 70, 0.12) !important;
+  }
+  .glass-solid::before {
+    display: none;
+  }
+
+  .glass-hover {
+    transition:
+      transform 200ms ease,
+      box-shadow 200ms ease,
+      background 200ms ease;
+  }
+  .glass-hover:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      0 12px 40px rgba(70, 90, 120, 0.2),
+      0 2px 4px rgba(70, 90, 120, 0.1);
+  }
+  .glass-hover:active {
+    transform: translateY(0);
+  }
+
+  /* Ink button (solid, like "Plant a memory") */
+  .ink-button {
+    background: linear-gradient(180deg, oklch(0.32 0.02 260) 0%, oklch(0.22 0.02 260) 100%);
+    color: oklch(0.98 0.005 220);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      0 8px 24px rgba(30, 40, 60, 0.3);
+    transition:
+      transform 200ms ease,
+      box-shadow 200ms ease;
+  }
+  .ink-button:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 12px 32px rgba(30, 40, 60, 0.38);
+  }
+
+  .sketch-flower {
+    filter: drop-shadow(0 4px 10px rgba(60, 80, 60, 0.12));
+  }
+
+  .flower-sway {
+    animation: flower-sway 5s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+  }
+  @keyframes flower-sway {
+    from {
+      transform: rotate(-2deg);
+    }
+    to {
+      transform: rotate(2.5deg);
+    }
+  }
+
+  .bloom-in {
+    animation: bloom-in 900ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+    transform-origin: bottom center;
+  }
+  @keyframes bloom-in {
+    0% {
+      transform: scale(0.2) rotate(-8deg);
+      opacity: 0;
+    }
+    60% {
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  .fade-up {
+    animation: fade-up 500ms ease both;
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Readable contrast helpers for text sitting on soft glass. */
+  .text-readable {
+    color: oklch(0.28 0.03 260);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+}
+
+/* Reduced motion: visitors who prefer less animation get a calmer garden. */
+@media (prefers-reduced-motion: reduce) {
+  .flower-sway,
+  .bloom-in,
+  .fade-up {
+    animation: none !important;
+  }
+
+  .glass-hover,
+  .ink-button,
+  .motion-safe\:transition-all {
+    transition: none !important;
+  }
+
+  .glass-hover:hover,
+  .ink-button:hover {
+    transform: none;
+  }
+}
