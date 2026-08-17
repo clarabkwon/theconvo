@@ -136,11 +136,7 @@ export function PlantFlow({
 
   const isBusy = feedback.kind === 'loading'
 
-  // Sprout step uses a plain white panel, as noted in design feedback.
-  const modalClass = cn(
-    step === 'song' && 'max-w-3xl',
-    step === 'create' && 'glass-solid',
-  )
+  const modalClass = cn(step === 'song' && 'max-w-3xl')
 
   return (
     <GlassModal onClose={onClose} labelledBy="plant-flow-title" className={modalClass}>
