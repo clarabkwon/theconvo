@@ -9,8 +9,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Static HTML export for GitHub Pages hosting.
-  output: 'export',
+  // Static export is only for GitHub Pages. Local, Vercel, and DreamHost VPS
+  // run as a normal Next.js server so /api/memories can save flowers.
+  ...(isGithubPages ? { output: 'export' } : {}),
   basePath,
   assetPrefix: basePath || undefined,
   env: {

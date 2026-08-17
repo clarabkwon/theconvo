@@ -25,10 +25,15 @@ function toSong(s: CatalogSong): Song {
   return { id: s.id, title: s.title, artist: s.artist, tint: s.tint, mood: s.mood }
 }
 
-function songById(id: string): Song {
+export function songById(id: string): Song {
   const found = SONG_CATALOG.find((s) => s.id === id)
   if (!found) throw new Error(`Missing song id: ${id}`)
   return toSong(found)
+}
+
+export function findSong(id: string): Song | undefined {
+  const found = SONG_CATALOG.find((s) => s.id === id)
+  return found ? toSong(found) : undefined
 }
 
 // Kept for older imports. Prefer SONG_CATALOG from lib/songs for the full list.

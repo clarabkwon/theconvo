@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { GardenBackground, MemoryFlowers } from '@/components/garden-field'
 import { GardenOverlay } from '@/components/garden'
 import { Landing } from '@/components/landing'
@@ -8,6 +8,11 @@ import { PlantFlow } from '@/components/plant-flow'
 import { FlowerDetail } from '@/components/flower-detail'
 import { BackgroundMusic } from '@/components/background-music'
 import { INITIAL_MEMORIES, type Memory, type Song } from '@/lib/memories'
+import { assetPath } from '@/lib/utils'
+
+function memoriesUrl() {
+  return assetPath('/api/memories')
+}
 
 // Root page for The Memory Garden. It switches between landing and garden views.
 export default function MemoryGardenPage() {
@@ -29,34 +34,53 @@ export default function MemoryGardenPage() {
 
   const previewMemory = previewIndex === null ? null : memories[previewIndex % memories.length]
 
-  // Adds a new anonymous memory flower to the garden field.
-  function handlePlanted(song: Song, message: string, flower: number) {
-    const now = new Date()
-    const planted: Memory = {
-      id: `planted-${now.getTime()}`,
-      song,
-      message,
-      // Pseudonym is kept in data for older entries, but the UI never shows it.
-      pseudonym: 'anonymous',
-      date: now.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      }),
-      flower,
-      x: 38 + Math.random() * 24,
-      y: 30 + Math.random() * 20,
-      size: 160,
+  useEffect(() => {
+    let cancelled = false
+    async function loadMemories() {
+      try {
+        const res = await fetch(memoriesUrl())
+        if (!res.ok) return
+        const data = (await res.json()) as { memories?: Memory[] }
+        if (!cancelled && Array.isArray(data.memories)) {
+          setMemories(data.memories)
+        }
+      } catch {
+        // Keep the starter flowers if the server store is not available yet.
+      }
     }
-    setMemories((prev) => [...prev, planted])
-    setPlantOpen(false)
-    setView('garden')
-    setWandering(false)
-    setFocusId(planted.id)
-    // Do not open the minimal preview after planting.
-    setPreviewIndex(null)
-    setPlantSuccess('Your memory is planted in the garden.')
-    window.setTimeout(() => setPlantSuccess(null), 3200)
+    loadMemories()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  // Saves a new anonymous memory flower on the server, then shows it in the field.
+  async function handlePlanted(song: Song, message: string, flower: number) {
+    try {
+      const res = await fetch(memoriesUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ songId: song.id, message, flower }),
+      })
+      const data = (await res.json()) as { memory?: Memory; error?: string }
+      if (!res.ok || !data.memory) {
+        setPlantSuccess(data.error || 'Could not plant this memory. Please try again.')
+        window.setTimeout(() => setPlantSuccess(null), 3200)
+        return
+      }
+      const planted = data.memory
+      setMemories((prev) => [...prev, planted])
+      setPlantOpen(false)
+      setView('garden')
+      setWandering(false)
+      setFocusId(planted.id)
+      setPreviewIndex(null)
+      setPlantSuccess('Your memory is planted in the garden.')
+      window.setTimeout(() => setPlantSuccess(null), 3200)
+    } catch {
+      setPlantSuccess('Could not plant this memory. Please try again.')
+      window.setTimeout(() => setPlantSuccess(null), 3200)
+    }
   }
 
   return (

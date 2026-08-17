@@ -10,8 +10,6 @@ const BLUR_BY_DEPTH = ['blur(0px)', 'blur(2px)', 'blur(5px)', 'blur(12px)']
 const SCALE_BY_DEPTH = [1, 1.02, 1.04, 1.08]
 
 // Full screen scene behind all other UI.
-// Landing keeps the painted flower field (with lower vibrancy).
-// The garden view is a natural grass field with no visible platform shape.
 export function GardenBackground({ depth }: { depth: 0 | 1 | 2 | 3 }) {
   const isGarden = depth >= 1
 
@@ -19,19 +17,18 @@ export function GardenBackground({ depth }: { depth: 0 | 1 | 2 | 3 }) {
     <div className="fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
       <div className="absolute inset-0 bg-background" />
 
-      {/* Landing hero: painted flowers, vibrancy turned down. */}
+      {/* Landing: original painted flower field. */}
       {!isGarden && (
         <div
           className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out"
           style={{
             backgroundImage: `url(${assetPath('/images/garden-field.png')})`,
-            filter: 'saturate(0.45) brightness(1.08) contrast(0.92)',
-            opacity: 0.85,
+            opacity: 0.75,
           }}
         />
       )}
 
-      {/* Garden observe mode: continuous sky into grass. No shaped bed. */}
+      {/* Garden observe mode: sky and grass melt together with no hard horizon. */}
       {isGarden && (
         <div
           className="absolute inset-0 transition-all duration-700 ease-out"
@@ -40,32 +37,68 @@ export function GardenBackground({ depth }: { depth: 0 | 1 | 2 | 3 }) {
             transform: `scale(${SCALE_BY_DEPTH[depth]})`,
           }}
         >
-          {/* Soft sky fading into distant meadow. */}
+          {/* One continuous wash from sky into meadow so there is no straight seam. */}
           <div
             className="absolute inset-0"
             style={{
-              background:
-                'linear-gradient(180deg, #cfe0ec 0%, #dde9ef 22%, #e6efe4 40%, #d4e3c4 58%, #b8ce9a 78%, #9fb87e 100%)',
+              background: `linear-gradient(
+                180deg,
+                #d4e4f0 0%,
+                #dceaf2 14%,
+                #e3edf0 26%,
+                #e6efe6 38%,
+                #dce8d0 48%,
+                #cddfb8 58%,
+                #b8d09a 72%,
+                #a3c284 86%,
+                #92b574 100%
+              )`,
             }}
           />
 
-          {/* Quiet grass texture across the lower field, heavily desaturated. */}
+          {/* Soft grass texture that fades in gradually from the mid sky. */}
           <div
-            className="absolute inset-x-0 bottom-0 top-[24%] bg-cover bg-[center_65%]"
+            className="absolute inset-0 bg-cover bg-[center_70%]"
             style={{
               backgroundImage: `url(${assetPath('/images/garden-grass.png')})`,
-              filter: 'saturate(0.3) brightness(1.15) contrast(0.88)',
-              opacity: 0.42,
+              filter: 'saturate(0.28) brightness(1.14) contrast(0.9)',
+              opacity: 0.38,
               mixBlendMode: 'multiply',
+              // Soft top fade removes any hard edge where texture begins.
+              WebkitMaskImage:
+                'linear-gradient(180deg, transparent 0%, transparent 18%, rgba(0,0,0,0.15) 32%, rgba(0,0,0,0.55) 48%, black 68%, black 100%)',
+              maskImage:
+                'linear-gradient(180deg, transparent 0%, transparent 18%, rgba(0,0,0,0.15) 32%, rgba(0,0,0,0.55) 48%, black 68%, black 100%)',
             }}
           />
 
-          {/* Natural grass color that blends with no hard edges. */}
+          {/* Extra haze band so green and blue dissolve into each other. */}
           <div
-            className="absolute inset-x-0 bottom-0 top-[34%]"
+            className="absolute inset-x-0 top-[18%] h-[42%]"
             style={{
-              background:
-                'linear-gradient(180deg, rgba(200, 214, 170, 0) 0%, rgba(170, 192, 138, 0.45) 18%, rgba(148, 176, 118, 0.75) 45%, rgba(126, 158, 100, 0.9) 100%)',
+              background: `linear-gradient(
+                180deg,
+                rgba(212, 228, 240, 0.55) 0%,
+                rgba(230, 238, 230, 0.35) 35%,
+                rgba(200, 220, 170, 0.2) 70%,
+                rgba(168, 196, 130, 0) 100%
+              )`,
+              filter: 'blur(18px)',
+            }}
+          />
+
+          {/* Lower meadow depth without a sharp top cut. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(
+                180deg,
+                transparent 0%,
+                transparent 40%,
+                rgba(170, 196, 140, 0.18) 55%,
+                rgba(140, 176, 110, 0.45) 72%,
+                rgba(120, 158, 96, 0.72) 100%
+              )`,
             }}
           />
         </div>

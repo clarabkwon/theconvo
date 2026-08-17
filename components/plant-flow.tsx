@@ -50,7 +50,7 @@ export function PlantFlow({
   onPlanted,
 }: {
   onClose: () => void
-  onPlanted: (song: Song, message: string, flower: number) => void
+  onPlanted: (song: Song, message: string, flower: number) => void | Promise<void>
 }) {
   // Current step in the planting flow. Going back keeps all typed data.
   const [step, setStep] = useState<Step>('song')
