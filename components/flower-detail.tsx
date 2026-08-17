@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Music, Sprout } from 'lucide-react'
 import { GlassModal } from '@/components/glass'
-import { cn, assetPath } from '@/lib/utils'
+import { cn, assetPath, youtubeSearchUrl } from '@/lib/utils'
 import { flowerSrc, type Memory } from '@/lib/memories'
 
 // Shows one memory flower in detail. Posts stay anonymous on purpose.
@@ -25,28 +25,38 @@ export function FlowerDetail({
     <GlassModal onClose={onClose} labelledBy="flower-detail-title" className="max-w-lg">
       {view === 'detail' ? (
         <div className="flex flex-col">
-          {/* Song title and artist sit at the top of the card. */}
+          {/* Song icon and title open YouTube. Artist stays plain text. */}
           <div className="flex items-center gap-3">
-            <span
-              className={cn(
-                'relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl',
-                memory.song.tint,
-              )}
+            <a
+              href={youtubeSearchUrl(memory.song.title, memory.song.artist)}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`Listen to ${memory.song.title} by ${memory.song.artist} on YouTube`}
+              className="flex min-w-0 items-center gap-3"
             >
-              <Music className="h-5 w-5 text-foreground/70" aria-hidden="true" />
-            </span>
-            <div>
-              <h2 id="flower-detail-title" className="text-base font-semibold text-foreground">
+              <span
+                className={cn(
+                  'relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl',
+                  memory.song.tint,
+                )}
+              >
+                <Music className="h-5 w-5 text-foreground/70" aria-hidden="true" />
+              </span>
+              <h2
+                id="flower-detail-title"
+                className="text-base font-semibold text-foreground underline-offset-4 hover:underline"
+              >
                 {memory.song.title}
               </h2>
-              <p className="text-sm text-muted-foreground">Song · {memory.song.artist}</p>
-            </div>
+            </a>
           </div>
+          <p className="mt-1 pl-[3.75rem] text-sm text-muted-foreground">
+            Song · {memory.song.artist}
+          </p>
 
           {/* The shared memory text lives in this glass box. */}
           <div className="glass mt-5 rounded-2xl p-5">
-            <h3 className="relative z-10 font-serif text-2xl text-foreground">Message</h3>
-            <p className="relative z-10 mt-2 text-sm leading-relaxed text-foreground/90 text-pretty">
+            <p className="relative z-10 text-sm leading-relaxed text-foreground/90 text-pretty">
               {memory.message}
             </p>
           </div>
