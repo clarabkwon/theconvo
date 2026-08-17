@@ -12,18 +12,15 @@ export function GardenOverlay({
   wandering,
   onBack,
   onPlant,
-  onToggleWander,
   previewMemory,
   onDismissPreview,
   onOpenPreview,
-  // When true, hide Wander deeper and Plant a memory (memory creation is open).
   hideFieldActions = false,
 }: {
   memories: Memory[]
   wandering: boolean
   onBack: () => void
   onPlant: () => void
-  onToggleWander: () => void
   previewMemory: Memory | null
   onDismissPreview: () => void
   onOpenPreview: (m: Memory) => void
@@ -70,17 +67,7 @@ export function GardenOverlay({
 
       {/* Bottom actions stay off while the plant flow (screen three) is open. */}
       {!hideFieldActions && (
-        <div className="mt-auto flex flex-wrap items-end justify-between gap-4 pb-2">
-          <button
-            type="button"
-            onClick={onToggleWander}
-            className="glass glass-hover glass-pill pointer-events-auto px-5 py-2.5 text-sm font-medium text-foreground cursor-pointer"
-          >
-            <span className="relative z-10">
-              {wandering ? 'Step back' : 'Wander deeper'}
-            </span>
-          </button>
-
+        <div className="mt-auto flex flex-wrap items-end justify-end gap-4 pb-2">
           {previewMemory && (
             <GlassPanel className="fade-up pointer-events-auto relative w-56 rounded-2xl p-4">
               <button

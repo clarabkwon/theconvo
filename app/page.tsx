@@ -114,7 +114,6 @@ export default function MemoryGardenPage() {
             setFocusId(null)
           }}
           onPlant={() => setPlantOpen(true)}
-          onToggleWander={() => setWandering((w) => !w)}
           previewMemory={previewMemory}
           onDismissPreview={() => setPreviewIndex(null)}
           onOpenPreview={(m) => setDetail(m)}

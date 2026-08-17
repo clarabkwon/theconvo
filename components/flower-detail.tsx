@@ -51,7 +51,7 @@ export function FlowerDetail({
             </a>
           </div>
           <p className="mt-1 pl-[3.75rem] text-sm text-muted-foreground">
-            Song · {memory.song.artist}
+            {memory.song.artist}
           </p>
 
           {/* The shared memory text lives in this glass box. */}

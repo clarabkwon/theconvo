@@ -137,10 +137,7 @@ export function PlantFlow({
   const isBusy = feedback.kind === 'loading'
 
   // Sprout step uses a plain white panel, as noted in design feedback.
-  const modalClass = cn(
-    step === 'song' && 'max-w-3xl',
-    step === 'create' && 'glass-solid',
-  )
+  const modalClass = cn(step === 'create' && 'glass-solid')
 
   return (
     <GlassModal onClose={onClose} labelledBy="plant-flow-title" className={modalClass}>
@@ -216,83 +213,43 @@ export function PlantFlow({
       </button>
 
       {step === 'song' && (
-        <div className="flex flex-col gap-5 md:flex-row md:gap-6">
-          <div className="flex-1">
-            <div className="text-center">
-              <h2 id="plant-flow-title" className="font-serif text-3xl text-foreground">
-                Choose the song
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground text-pretty">
-                A song tied to the memory, so an old moment can keep its soundtrack.
-              </p>
-            </div>
-
-            <label className="glass mt-5 flex items-center gap-2 rounded-full px-4 py-2.5">
-              <Search className="relative z-10 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Select or search the song"
-                className="relative z-10 w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                aria-label="Search for a song"
-              />
-            </label>
-
-            <ul className="mt-4 flex max-h-[50vh] flex-col gap-2.5 overflow-y-auto pr-1">
-              {filtered.map((s) => (
-                <li key={s.id}>
-                  <button
-                    type="button"
-                    onClick={() => pickSong(s)}
-                    className="glass glass-hover flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left cursor-pointer"
-                  >
-                    <span
-                      className={cn(
-                        'relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
-                        s.tint,
-                      )}
-                    >
-                      <Music className="h-4 w-4 text-foreground/70" aria-hidden="true" />
-                    </span>
-                    <span className="relative z-10 flex-1">
-                      <span className="block text-sm font-semibold text-foreground">{s.title}</span>
-                      <span className="block text-xs text-muted-foreground">{s.artist}</span>
-                    </span>
-                    <ChevronDown className="relative z-10 h-4 w-4 rotate-[-90deg] text-muted-foreground" aria-hidden="true" />
-                  </button>
-                </li>
-              ))}
-              {filtered.length === 0 && (
-                <li className="py-4 text-center text-sm text-muted-foreground">
-                  No songs found. Try another search or mood.
-                </li>
-              )}
-            </ul>
+        <div className="flex flex-col">
+          <div className="text-center">
+            <h2 id="plant-flow-title" className="font-serif text-3xl text-foreground">
+              Choose the song
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground text-pretty">
+              A song tied to the memory, so an old moment can keep its soundtrack.
+            </p>
           </div>
 
-          <aside className="glass rounded-2xl p-4 md:w-52 md:self-start">
-            <h3 className="relative z-10 text-sm font-semibold text-foreground">
-              Mood
-            </h3>
-            <p className="relative z-10 mt-1 text-xs text-muted-foreground text-pretty">
+          <label className="glass mt-5 flex items-center gap-2 rounded-full px-4 py-2.5">
+            <Search className="relative z-10 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Select or search the song"
+              className="relative z-10 w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+              aria-label="Search for a song"
+            />
+          </label>
+
+          <div className="mt-3">
+            <p className="text-xs text-muted-foreground">
               Pick a grief or loss mood to narrow the songs.
             </p>
-            <ul className="relative z-10 mt-3 flex flex-col gap-2">
+            <ul className="mt-2 flex flex-wrap gap-2">
               <li>
                 <button
                   type="button"
                   onClick={() => setMood('all')}
                   className={cn(
-                    'glass glass-hover flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left cursor-pointer',
+                    'glass glass-hover flex items-center gap-1.5 rounded-full px-3 py-1.5 cursor-pointer',
                     mood === 'all' && 'ring-2 ring-foreground/30',
                   )}
                 >
-                  <span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/80">
-                    <Sparkles className="h-3 w-3 text-foreground/70" aria-hidden="true" />
-                  </span>
-                  <span className="relative z-10 truncate text-xs font-medium text-foreground">
-                    All moods
-                  </span>
+                  <Sparkles className="relative z-10 h-3 w-3 text-foreground/70" aria-hidden="true" />
+                  <span className="relative z-10 text-xs font-medium text-foreground">All moods</span>
                 </button>
               </li>
               {MOODS.map((m, i) => {
@@ -305,30 +262,52 @@ export function PlantFlow({
                       onClick={() => setMood(m.id)}
                       title={m.hint}
                       className={cn(
-                        'glass glass-hover flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left cursor-pointer',
+                        'glass glass-hover flex items-center gap-1.5 rounded-full px-3 py-1.5 cursor-pointer',
                         mood === m.id && 'ring-2 ring-foreground/30',
                       )}
                     >
-                      <span
-                        className={cn(
-                          'relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full',
-                          songsForMood(m.id)[0]?.tint ?? 'bg-white/80',
-                        )}
-                      >
-                        <Icon className="h-3 w-3 text-foreground/70" aria-hidden="true" />
-                      </span>
-                      <span className="relative z-10 truncate text-xs font-medium text-foreground">
-                        {m.label}
-                      </span>
+                      <Icon className="relative z-10 h-3 w-3 text-foreground/70" aria-hidden="true" />
+                      <span className="relative z-10 text-xs font-medium text-foreground">{m.label}</span>
                     </button>
                   </li>
                 )
               })}
             </ul>
-            <p className="relative z-10 mt-3 text-xs text-muted-foreground">
+            <p className="mt-2 text-xs text-muted-foreground">
               {filtered.length} song{filtered.length === 1 ? '' : 's'}
             </p>
-          </aside>
+          </div>
+
+          <ul className="mt-3 flex max-h-[38vh] flex-col gap-2.5 overflow-y-auto pr-1">
+            {filtered.map((s) => (
+              <li key={s.id}>
+                <button
+                  type="button"
+                  onClick={() => pickSong(s)}
+                  className="glass glass-hover flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left cursor-pointer"
+                >
+                  <span
+                    className={cn(
+                      'relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
+                      s.tint,
+                    )}
+                  >
+                    <Music className="h-4 w-4 text-foreground/70" aria-hidden="true" />
+                  </span>
+                  <span className="relative z-10 flex-1">
+                    <span className="block text-sm font-semibold text-foreground">{s.title}</span>
+                    <span className="block text-xs text-muted-foreground">{s.artist}</span>
+                  </span>
+                  <ChevronDown className="relative z-10 h-4 w-4 rotate-[-90deg] text-muted-foreground" aria-hidden="true" />
+                </button>
+              </li>
+            ))}
+            {filtered.length === 0 && (
+              <li className="py-4 text-center text-sm text-muted-foreground">
+                No songs found. Try another search or mood.
+              </li>
+            )}
+          </ul>
         </div>
       )}
 
@@ -338,7 +317,7 @@ export function PlantFlow({
             Write the memory
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {song.title} · {song.artist}
+            {song.artist}
           </p>
 
           <div className="glass mt-5 w-full rounded-2xl p-1">
