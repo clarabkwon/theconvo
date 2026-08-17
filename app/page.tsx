@@ -106,6 +106,7 @@ export default function MemoryGardenPage() {
         />
       ) : (
         <GardenOverlay
+          memories={memories}
           wandering={wandering}
           onBack={() => {
             setView('landing')
