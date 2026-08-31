@@ -1,8 +1,10 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
+import { get, put } from '@vercel/blob'
 import { findSong, INITIAL_MEMORIES, type Memory, type Song } from '@/lib/memories'
 
 const STORE_PATH = path.join(process.cwd(), 'data', 'planted-memories.json')
+const BLOB_PATH = 'data/planted-memories.json'
 
 type PlantedRow = {
   id: string
@@ -15,19 +17,67 @@ type PlantedRow = {
   size: number
 }
 
-async function readPlanted(): Promise<PlantedRow[]> {
+function useBlobStore() {
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN)
+}
+
+function missingBlobStoreError() {
+  return new Error(
+    'Memory storage is not configured on Vercel. Open your project in the Vercel dashboard, go to Storage, create a Blob store, connect it to this project, then redeploy.',
+  )
+}
+
+function parsePlanted(raw: string): PlantedRow[] {
+  const parsed = JSON.parse(raw) as PlantedRow[]
+  return Array.isArray(parsed) ? parsed : []
+}
+
+async function readPlantedFromFile(): Promise<PlantedRow[]> {
   try {
     const raw = await fs.readFile(STORE_PATH, 'utf8')
-    const parsed = JSON.parse(raw) as PlantedRow[]
-    return Array.isArray(parsed) ? parsed : []
+    return parsePlanted(raw)
   } catch {
     return []
   }
 }
 
-async function writePlanted(rows: PlantedRow[]) {
+async function writePlantedToFile(rows: PlantedRow[]) {
   await fs.mkdir(path.dirname(STORE_PATH), { recursive: true })
   await fs.writeFile(STORE_PATH, JSON.stringify(rows, null, 2) + '\n', 'utf8')
+}
+
+async function readPlantedFromBlob(): Promise<PlantedRow[]> {
+  try {
+    const result = await get(BLOB_PATH, { access: 'private' })
+    if (!result || result.statusCode !== 200 || !result.stream) return []
+    const raw = await new Response(result.stream).text()
+    return parsePlanted(raw)
+  } catch {
+    return []
+  }
+}
+
+async function writePlantedToBlob(rows: PlantedRow[]) {
+  await put(BLOB_PATH, JSON.stringify(rows, null, 2) + '\n', {
+    access: 'private',
+    addRandomSuffix: false,
+    allowOverwrite: true,
+  })
+}
+
+async function readPlanted(): Promise<PlantedRow[]> {
+  if (useBlobStore()) return readPlantedFromBlob()
+  if (process.env.VERCEL) throw missingBlobStoreError()
+  return readPlantedFromFile()
+}
+
+async function writePlanted(rows: PlantedRow[]) {
+  if (useBlobStore()) {
+    await writePlantedToBlob(rows)
+    return
+  }
+  if (process.env.VERCEL) throw missingBlobStoreError()
+  await writePlantedToFile(rows)
 }
 
 function rowToMemory(row: PlantedRow): Memory | null {
