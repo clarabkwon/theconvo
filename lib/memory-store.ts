@@ -1,10 +1,9 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
-import { get, put } from '@vercel/blob'
 import { findSong, INITIAL_MEMORIES, type Memory, type Song } from '@/lib/memories'
+import { hasSupabaseConfig, requireSupabaseAdmin } from '@/lib/supabase-server'
 
 const STORE_PATH = path.join(process.cwd(), 'data', 'planted-memories.json')
-const BLOB_PATH = 'data/planted-memories.json'
 
 type PlantedRow = {
   id: string
@@ -17,19 +16,50 @@ type PlantedRow = {
   size: number
 }
 
-function useBlobStore() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN)
+type DbPlantedRow = {
+  id: string
+  song_id: string
+  message: string
+  date: string
+  flower: number
+  x: number
+  y: number
+  size: number
 }
 
-function missingBlobStoreError() {
-  return new Error(
-    'Memory storage is not configured on Vercel. Open your project in the Vercel dashboard, go to Storage, create a Blob store, connect it to this project, then redeploy.',
-  )
+function useSupabaseStore() {
+  return hasSupabaseConfig()
 }
 
 function parsePlanted(raw: string): PlantedRow[] {
   const parsed = JSON.parse(raw) as PlantedRow[]
   return Array.isArray(parsed) ? parsed : []
+}
+
+function dbRowToPlanted(row: DbPlantedRow): PlantedRow {
+  return {
+    id: row.id,
+    songId: row.song_id,
+    message: row.message,
+    date: row.date,
+    flower: row.flower,
+    x: row.x,
+    y: row.y,
+    size: row.size,
+  }
+}
+
+function plantedToDbRow(row: PlantedRow): DbPlantedRow {
+  return {
+    id: row.id,
+    song_id: row.songId,
+    message: row.message,
+    date: row.date,
+    flower: row.flower,
+    x: row.x,
+    y: row.y,
+    size: row.size,
+  }
 }
 
 async function readPlantedFromFile(): Promise<PlantedRow[]> {
@@ -46,38 +76,51 @@ async function writePlantedToFile(rows: PlantedRow[]) {
   await fs.writeFile(STORE_PATH, JSON.stringify(rows, null, 2) + '\n', 'utf8')
 }
 
-async function readPlantedFromBlob(): Promise<PlantedRow[]> {
-  try {
-    const result = await get(BLOB_PATH, { access: 'private' })
-    if (!result || result.statusCode !== 200 || !result.stream) return []
-    const raw = await new Response(result.stream).text()
-    return parsePlanted(raw)
-  } catch {
-    return []
+async function readPlantedFromSupabase(): Promise<PlantedRow[]> {
+  const supabase = requireSupabaseAdmin()
+  const { data, error } = await supabase
+    .from('planted_memories')
+    .select('id, song_id, message, date, flower, x, y, size')
+    .order('created_at', { ascending: true })
+
+  if (error) {
+    throw new Error(error.message)
   }
+
+  return (data ?? []).map(dbRowToPlanted)
 }
 
-async function writePlantedToBlob(rows: PlantedRow[]) {
-  await put(BLOB_PATH, JSON.stringify(rows, null, 2) + '\n', {
-    access: 'private',
-    addRandomSuffix: false,
-    allowOverwrite: true,
-  })
+async function insertPlantedInSupabase(row: PlantedRow) {
+  const supabase = requireSupabaseAdmin()
+  const { error } = await supabase.from('planted_memories').insert(plantedToDbRow(row))
+  if (error) {
+    throw new Error(error.message)
+  }
 }
 
 async function readPlanted(): Promise<PlantedRow[]> {
-  if (useBlobStore()) return readPlantedFromBlob()
-  if (process.env.VERCEL) throw missingBlobStoreError()
+  if (useSupabaseStore()) return readPlantedFromSupabase()
+  if (process.env.VERCEL) {
+    throw new Error(
+      'Supabase is not configured on Vercel. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in your project settings, run supabase/planted-memories.sql in Supabase, then redeploy.',
+    )
+  }
   return readPlantedFromFile()
 }
 
-async function writePlanted(rows: PlantedRow[]) {
-  if (useBlobStore()) {
-    await writePlantedToBlob(rows)
+async function appendPlanted(row: PlantedRow) {
+  if (useSupabaseStore()) {
+    await insertPlantedInSupabase(row)
     return
   }
-  if (process.env.VERCEL) throw missingBlobStoreError()
-  await writePlantedToFile(rows)
+  if (process.env.VERCEL) {
+    throw new Error(
+      'Supabase is not configured on Vercel. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in your project settings, run supabase/planted-memories.sql in Supabase, then redeploy.',
+    )
+  }
+  const planted = await readPlantedFromFile()
+  planted.push(row)
+  await writePlantedToFile(planted)
 }
 
 function rowToMemory(row: PlantedRow): Memory | null {
@@ -135,9 +178,7 @@ export async function plantMemory(input: {
     size: 160,
   }
 
-  const planted = await readPlanted()
-  planted.push(row)
-  await writePlanted(planted)
+  await appendPlanted(row)
 
   const memory = rowToMemory(row)
   if (!memory) throw new Error('Could not save this memory.')
