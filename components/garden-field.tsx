@@ -17,91 +17,27 @@ export function GardenBackground({ depth }: { depth: 0 | 1 | 2 | 3 }) {
     <div className="fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
       <div className="absolute inset-0 bg-background" />
 
-      {/* Landing: original painted flower field. */}
+      {/* Landing: The Convo title-card art, full-bleed. */}
       {!isGarden && (
         <div
           className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out"
           style={{
-            backgroundImage: `url(${assetPath('/images/garden-field.png')})`,
-            opacity: 0.75,
+            backgroundImage: `url(${assetPath('/images/the-convo-front.jpg')})`,
+            opacity: 1,
           }}
         />
       )}
 
-      {/* Garden observe mode: sky and grass melt together with no hard horizon. */}
+      {/* Garden field: sky-and-grass painting for planted memories. */}
       {isGarden && (
         <div
-          className="absolute inset-0 transition-all duration-700 ease-out"
+          className="absolute inset-0 bg-cover bg-center transition-all duration-700 ease-out"
           style={{
+            backgroundImage: `url(${assetPath('/images/the-convo-garden.jpg')})`,
             filter: BLUR_BY_DEPTH[depth],
             transform: `scale(${SCALE_BY_DEPTH[depth]})`,
           }}
-        >
-          {/* One continuous wash from sky into meadow so there is no straight seam. */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(
-                180deg,
-                #d4e4f0 0%,
-                #dceaf2 14%,
-                #e3edf0 26%,
-                #e6efe6 38%,
-                #dce8d0 48%,
-                #cddfb8 58%,
-                #b8d09a 72%,
-                #a3c284 86%,
-                #92b574 100%
-              )`,
-            }}
-          />
-
-          {/* Soft grass texture that fades in gradually from the mid sky. */}
-          <div
-            className="absolute inset-0 bg-cover bg-[center_70%]"
-            style={{
-              backgroundImage: `url(${assetPath('/images/garden-grass.png')})`,
-              filter: 'saturate(0.28) brightness(1.14) contrast(0.9)',
-              opacity: 0.38,
-              mixBlendMode: 'multiply',
-              // Soft top fade removes any hard edge where texture begins.
-              WebkitMaskImage:
-                'linear-gradient(180deg, transparent 0%, transparent 18%, rgba(0,0,0,0.15) 32%, rgba(0,0,0,0.55) 48%, black 68%, black 100%)',
-              maskImage:
-                'linear-gradient(180deg, transparent 0%, transparent 18%, rgba(0,0,0,0.15) 32%, rgba(0,0,0,0.55) 48%, black 68%, black 100%)',
-            }}
-          />
-
-          {/* Extra haze band so green and blue dissolve into each other. */}
-          <div
-            className="absolute inset-x-0 top-[18%] h-[42%]"
-            style={{
-              background: `linear-gradient(
-                180deg,
-                rgba(212, 228, 240, 0.55) 0%,
-                rgba(230, 238, 230, 0.35) 35%,
-                rgba(200, 220, 170, 0.2) 70%,
-                rgba(168, 196, 130, 0) 100%
-              )`,
-              filter: 'blur(18px)',
-            }}
-          />
-
-          {/* Lower meadow depth without a sharp top cut. */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(
-                180deg,
-                transparent 0%,
-                transparent 40%,
-                rgba(170, 196, 140, 0.18) 55%,
-                rgba(140, 176, 110, 0.45) 72%,
-                rgba(120, 158, 96, 0.72) 100%
-              )`,
-            }}
-          />
-        </div>
+        />
       )}
 
       {/* Soft wash when a modal is open, for readable contrast. */}

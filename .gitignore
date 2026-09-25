@@ -17,3 +17,5 @@ out/
 tsconfig.tsbuildinfo
 .rewrite-commits.py
 *.tmp
+.vercel
+.env*

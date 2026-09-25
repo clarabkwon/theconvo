@@ -334,7 +334,7 @@ export function PlantFlow({
             Write the memory
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {song.artist}
+            {song.title} · {song.artist}
           </p>
 
           <div className="glass mt-5 w-full rounded-2xl p-1">
