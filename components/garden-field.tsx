@@ -80,15 +80,15 @@ function mulberry32(seed: number) {
 
 // Irregular patches, like wildflowers, not a straight row.
 const GRASS_PATCHES: Array<[number, number]> = [
-  [14, 58],
-  [28, 36],
-  [41, 64],
-  [53, 42],
-  [66, 70],
-  [78, 38],
-  [88, 56],
-  [22, 78],
-  [60, 28],
+  [14, 62],
+  [28, 48],
+  [41, 70],
+  [53, 54],
+  [66, 66],
+  [78, 50],
+  [88, 60],
+  [22, 74],
+  [60, 44],
 ]
 
 function layoutFlowers(memories: Memory[]) {
@@ -97,8 +97,9 @@ function layoutFlowers(memories: Memory[]) {
       const rnd = mulberry32(hashString(memory.id))
       const patch = GRASS_PATCHES[hashString(memory.id) % GRASS_PATCHES.length]
       const left = clamp(patch[0] + (rnd() - 0.5) * 26, 6, 94)
-      const top = clamp(patch[1] + (rnd() - 0.5) * 22, 22, 84)
-      const depth = (top - 22) / 62
+      // `top` is the stem/ground point. Keep it above the page edge so stems are not clipped.
+      const top = clamp(patch[1] + (rnd() - 0.5) * 16, 40, 82)
+      const depth = (top - 40) / 42
       const size = Math.round((memory.size || 140) * (0.68 + depth * 0.5 + (rnd() - 0.5) * 0.12))
       return { memory, index, left, top, size, z: Math.round(top * 10) }
     })
@@ -124,8 +125,8 @@ export function MemoryFlowers({
       className="pointer-events-none absolute inset-x-0 z-[5]"
       style={{
         // Invisible planting band: flowers sit in the grassy lower field, not the sky.
-        top: '48%',
-        bottom: '2%',
+        top: '46%',
+        bottom: '12%',
       }}
     >
       {laidOut.map(({ memory: m, index: i, left, top, size, z }) => {
@@ -137,7 +138,7 @@ export function MemoryFlowers({
             type="button"
             onClick={() => onSelect(m)}
             className={cn(
-              'group pointer-events-auto absolute -translate-x-1/2 cursor-pointer bg-transparent transition-all duration-500',
+              'group pointer-events-auto absolute -translate-x-1/2 -translate-y-full cursor-pointer bg-transparent transition-all duration-500',
               muted && !isFocus && 'opacity-60',
               isFocus && 'z-20',
             )}
