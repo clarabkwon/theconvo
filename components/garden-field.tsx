@@ -55,6 +55,24 @@ export function GardenBackground({ depth }: { depth: 0 | 1 | 2 | 3 }) {
   )
 }
 
+function clamp(n: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, n))
+}
+
+// Spread blooms across the grass in staggered columns so they do not pile in the center.
+function flowerSlot(index: number, total: number, memory: Memory) {
+  const columns = Math.min(Math.max(total, 1), 9)
+  const col = index % columns
+  const row = Math.floor(index / columns)
+  const colT = columns === 1 ? 0.5 : col / (columns - 1)
+  const jitterX = ((memory.x % 13) - 6.5) * 0.45
+  const jitterY = ((memory.y % 11) - 5.5) * 0.9
+  return {
+    left: clamp(7 + colT * 86 + jitterX, 5, 95),
+    top: clamp(42 + row * 16 + (col % 2) * 6 + jitterY, 36, 78),
+  }
+}
+
 // Memory flowers rest on the open grass. Placement stays inside an invisible band.
 export function MemoryFlowers({
   memories,
@@ -71,16 +89,14 @@ export function MemoryFlowers({
     <div
       className="pointer-events-none absolute inset-x-0 z-[5]"
       style={{
-        // Invisible planting band: flowers stay in the grassy lower field.
-        top: '38%',
-        bottom: '10%',
+        // Invisible planting band: flowers sit in the grassy lower field, not the sky.
+        top: '52%',
+        bottom: '4%',
       }}
     >
       {memories.map((m, i) => {
         const isFocus = focusId === m.id
-        // Spread blooms naturally across the grass using their stored x and y.
-        const left = 6 + (m.x / 100) * 88
-        const top = 8 + (m.y / 100) * 72
+        const { left, top } = flowerSlot(i, memories.length, m)
 
         return (
           <button

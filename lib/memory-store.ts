@@ -173,8 +173,8 @@ export async function plantMemory(input: {
       year: 'numeric',
     }),
     flower,
-    x: 38 + Math.random() * 24,
-    y: 30 + Math.random() * 20,
+    x: 8 + Math.random() * 84,
+    y: 12 + Math.random() * 70,
     size: 160,
   }
 
