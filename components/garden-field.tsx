@@ -59,18 +59,50 @@ function clamp(n: number, min: number, max: number) {
   return Math.min(max, Math.max(min, n))
 }
 
-// Spread blooms across the grass in staggered columns so they do not pile in the center.
-function flowerSlot(index: number, total: number, memory: Memory) {
-  const columns = Math.min(Math.max(total, 1), 9)
-  const col = index % columns
-  const row = Math.floor(index / columns)
-  const colT = columns === 1 ? 0.5 : col / (columns - 1)
-  const jitterX = ((memory.x % 13) - 6.5) * 0.45
-  const jitterY = ((memory.y % 11) - 5.5) * 0.9
-  return {
-    left: clamp(7 + colT * 86 + jitterX, 5, 95),
-    top: clamp(42 + row * 16 + (col % 2) * 6 + jitterY, 36, 78),
+function hashString(value: string) {
+  let hash = 2166136261
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i)
+    hash = Math.imul(hash, 16777619)
   }
+  return hash >>> 0
+}
+
+function mulberry32(seed: number) {
+  let a = seed | 0
+  return () => {
+    a = (a + 0x6d2b79f5) | 0
+    let t = Math.imul(a ^ (a >>> 15), 1 | a)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+// Irregular patches, like wildflowers, not a straight row.
+const GRASS_PATCHES: Array<[number, number]> = [
+  [14, 58],
+  [28, 36],
+  [41, 64],
+  [53, 42],
+  [66, 70],
+  [78, 38],
+  [88, 56],
+  [22, 78],
+  [60, 28],
+]
+
+function layoutFlowers(memories: Memory[]) {
+  return memories
+    .map((memory, index) => {
+      const rnd = mulberry32(hashString(memory.id))
+      const patch = GRASS_PATCHES[hashString(memory.id) % GRASS_PATCHES.length]
+      const left = clamp(patch[0] + (rnd() - 0.5) * 26, 6, 94)
+      const top = clamp(patch[1] + (rnd() - 0.5) * 22, 22, 84)
+      const depth = (top - 22) / 62
+      const size = Math.round((memory.size || 140) * (0.68 + depth * 0.5 + (rnd() - 0.5) * 0.12))
+      return { memory, index, left, top, size, z: Math.round(top * 10) }
+    })
+    .sort((a, b) => a.top - b.top)
 }
 
 // Memory flowers rest on the open grass. Placement stays inside an invisible band.
@@ -85,18 +117,19 @@ export function MemoryFlowers({
   muted: boolean
   focusId?: string | null
 }) {
+  const laidOut = layoutFlowers(memories)
+
   return (
     <div
       className="pointer-events-none absolute inset-x-0 z-[5]"
       style={{
         // Invisible planting band: flowers sit in the grassy lower field, not the sky.
-        top: '52%',
-        bottom: '4%',
+        top: '48%',
+        bottom: '2%',
       }}
     >
-      {memories.map((m, i) => {
+      {laidOut.map(({ memory: m, index: i, left, top, size, z }) => {
         const isFocus = focusId === m.id
-        const { left, top } = flowerSlot(i, memories.length, m)
 
         return (
           <button
@@ -106,31 +139,31 @@ export function MemoryFlowers({
             className={cn(
               'group pointer-events-auto absolute -translate-x-1/2 cursor-pointer bg-transparent transition-all duration-500',
               muted && !isFocus && 'opacity-60',
-              isFocus && 'z-10',
+              isFocus && 'z-20',
             )}
-            style={{ left: `${left}%`, top: `${top}%` }}
+            style={{ left: `${left}%`, top: `${top}%`, zIndex: isFocus ? 20 : z }}
             aria-label={`Open memory flower: ${m.song.title} by ${m.song.artist}`}
           >
             <span
               className={cn('block flower-sway', isFocus && 'bloom-in')}
-              style={{ animationDelay: isFocus ? '0ms' : `${(i % 5) * 700}ms` }}
+              style={{ animationDelay: isFocus ? '0ms' : `${(i % 7) * 420}ms` }}
             >
               {/* Soft ground shadow so each flower feels rooted in the grass. */}
               <span
-                className="pointer-events-none absolute left-1/2 top-[90%] h-2.5 w-[50%] -translate-x-1/2 rounded-[100%] bg-foreground/12 blur-[4px]"
+                className="pointer-events-none absolute left-1/2 top-[90%] h-2.5 w-[50%] -translate-x-1/2 rounded-[100%] bg-foreground/18 blur-[4px]"
                 aria-hidden="true"
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={flowerSrc(m.flower) || assetPath('/placeholder.svg')}
                 alt=""
-                width={m.size}
-                height={m.size}
+                width={size}
+                height={size}
                 className={cn(
                   'sketch-flower relative transition-transform duration-300 group-hover:scale-110',
                   isFocus && 'drop-shadow-[0_0_24px_rgba(255,255,255,0.9)]',
                 )}
-                style={{ width: m.size, height: m.size, objectFit: 'contain' }}
+                style={{ width: size, height: size, objectFit: 'contain' }}
               />
             </span>
           </button>
